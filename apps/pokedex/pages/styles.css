@@ -1,0 +1,13 @@
+.pokemon-table-container {
+  margin: 10px;
+  display: flex;
+  width: 95vw;
+}
+
+.pokemon-table-row {
+  cursor: pointer;
+}
+
+.Mui-selected {
+  border: none;
+}

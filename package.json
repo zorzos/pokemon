@@ -1,11 +1,18 @@
 {
   "name": "pokemon",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "start": "nx run pokedex:serve"
+  },
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@mui/material": "^5.11.9",
+    "@mui/x-data-grid": "^5.17.24",
     "@nrwl/next": "15.7.1",
+    "axios": "^1.3.3",
     "next": "13.1.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
