@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { savePokemon, selectPokemon } from '../store/slices/pokemonSlice';
 import { 
   getNextPage,
-  getPokemon,
   transformPokemonData
 } from '@pokemon/utils';
 
@@ -10,6 +11,9 @@ import { PokemonTable, PokemonModal } from '@pokemon/components'
 import * as CONSTANTS from './constants'
 
 export function Index() {
+  const dispatch = useDispatch()
+  const pokemonState = useSelector(selectPokemon)
+  const { pokemon } = pokemonState
   const [currentPokemonId, setCurrentPokemonId] = useState(0)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [totalCount, setTotalCount] = useState(0)
@@ -17,7 +21,6 @@ export function Index() {
   const [columnWidth, setColumnWidth] = useState(0)
   const [previousPageURL, setPreviousPageURL] = useState('')
   const [nextPageURL, setNextPageURL] = useState('')
-  const [pokemonList, setPokemonList] = useState([])
 
   const firstPageURL: string = CONSTANTS.firstPageURL
 
@@ -28,7 +31,7 @@ export function Index() {
       setTotalCount(count)
       setPreviousPageURL(previous)
       setNextPageURL(next)
-      setPokemonList(transformPokemonData(results))
+      dispatch(savePokemon(transformPokemonData(results)))
     })
     setIsLoading(false)
   }
@@ -45,7 +48,7 @@ export function Index() {
 
   const getCurrentPokemonURL = () => {
     if (currentPokemonId) {
-      return pokemonList.find((pokemon: any) => pokemon.id === currentPokemonId).url
+      return pokemon.find((pokemon: any) => pokemon.id === currentPokemonId).url
     } else return ''
   }
 
@@ -67,7 +70,7 @@ export function Index() {
           navigate={navigate}
           loading={isLoading}
           autoHeight
-          rows={pokemonList}
+          rows={pokemon}
           columnWidth={columnWidth}
           setCurrentPokemonId={setCurrentPokemonId}
         />
