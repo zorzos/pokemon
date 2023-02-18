@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nx run pokedex:serve",
-    "cypress": "cypress"
+    "automation-testing": "nx e2e pokedex-e2e"
   },
   "private": true,
   "dependencies": {
