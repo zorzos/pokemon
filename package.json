@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx run pokedex:serve"
+    "start": "nx run pokedex:serve",
+    "cypress": "cypress"
   },
   "private": true,
   "dependencies": {

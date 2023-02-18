@@ -21,7 +21,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/pokedex-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["apps/pokedex-e2e/**/*.cypress.{js,ts}"]
       }
     }
   },

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { GridColDef } from '@mui/x-data-grid/models';
 import { useDispatch, useSelector } from 'react-redux';
 import { savePokemon, selectPokemon } from '../store/slices/pokemonSlice';
+
 import { 
   getNextPage,
   transformPokemonData
 } from '@pokemon/utils';
-
 import { PokemonTable, PokemonModal } from '@pokemon/components'
-
 import * as CONSTANTS from './constants'
 
 export function Index() {
@@ -24,9 +24,9 @@ export function Index() {
 
   const firstPageURL: string = CONSTANTS.firstPageURL
 
-  const fetchPokemonList = (url: string): void => {
+  const fetchPokemonList = async (url: string): Promise<any> => {
     setIsLoading(true)
-    getNextPage(url).then(response => {
+    await getNextPage(url).then(response => {
       const { count, previous, next, results } = response
       setTotalCount(count)
       setPreviousPageURL(previous)
@@ -52,31 +52,35 @@ export function Index() {
     } else return ''
   }
 
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'Pokemon #', width: columnWidth / 7 },
+    { field: 'name', headerName: 'Name', width: columnWidth / 3 },
+    { field: 'url', headerName: 'URL', width: columnWidth / 3 },
+  ]
+
   useEffect(() => {
     fetchPokemonList(firstPageURL)
     setColumnWidth(Math.floor(window.innerWidth / 10) * 10)
   }, [])
 
   useEffect(() => {
-    if (currentPokemonId) {
-      setIsModalOpen(true)
-    }
+    if (currentPokemonId) setIsModalOpen(true)
   }, [currentPokemonId])
 
   return (
     <div className="pokemon-table-container">
         <PokemonTable
-          totalCount={totalCount}
-          navigate={navigate}
-          loading={isLoading}
           autoHeight
+          columns={columns}
+          loading={isLoading}
+          navigate={navigate}
           rows={pokemon}
-          columnWidth={columnWidth}
           setCurrentPokemonId={setCurrentPokemonId}
+          totalCount={totalCount}
         />
         <PokemonModal
-          open={isModalOpen}
           closeModal={() => closeModal()}
+          open={isModalOpen}
           pokemonURL={getCurrentPokemonURL()}
         />
     </div>

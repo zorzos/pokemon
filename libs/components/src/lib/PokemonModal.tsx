@@ -5,71 +5,54 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 
+import {
+    PokemonModalDetails,
+    PokemonModalProps
+ } from './types';
 import { capitalise, getPokemon } from '@pokemon/utils';
 import { DialogContent, DialogContentText } from '@mui/material';
 
-interface PokemonModalProps {
-    open: boolean;
-    closeModal(): void;
-    pokemonURL: string;
-}
-
-interface PokemonBaseStats {
-    name: string;
-    base_stat: number;
-}
-
-interface PokemonModalDetails {
-    id: string;
-    name: string;
-    image: string;
-    types: string[];
-    stats: PokemonBaseStats[];
-    baseEXP: number;
-    abilities: string[];
-}
-
 function PokemonModal(props: PokemonModalProps) {
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [pokemonDetails, setPokemonDetails] = useState<PokemonModalDetails>({
-        id: '',
-        name: '',
-        image: '',
-        types: [],
-        baseEXP: 0,
         abilities: [],
-        stats: []
+        baseEXP: 0,
+        id: '',
+        image: '',
+        name: '',
+        stats: [],
+        types: [],
     })
 
     const {
         open, closeModal, pokemonURL
     } = props
 
-    const fetchPokemon = (url: string): void => {
+    const fetchPokemon = async (url: string): Promise<void> => {
         setIsLoading(true)
-        getPokemon(url).then(response => {
+        await getPokemon(url).then(response => {
             const {
                 abilities,
+                base_experience,
                 id,
                 name,
                 sprites,
-                types,
-                base_experience,
-                stats
+                stats,
+                types
             } = response
             const pokemonResponseDetails: PokemonModalDetails = {
-                id: id,
-                name: capitalise(name),
-                image: sprites.front_default,
-                types: types.map((typeItem: any) => capitalise(typeItem.type.name)),
-                baseEXP: base_experience,
                 abilities: abilities.map((abilityItem: any) => capitalise(abilityItem.ability.name)),
+                baseEXP: base_experience,
+                id: id,
+                image: sprites.front_default,
+                name: capitalise(name),
                 stats: stats.map((statItem: any) => {
                     return {
                         name: capitalise(statItem.stat.name),
                         base_stat: statItem.base_stat
                     }
-                })
+                }),
+                types: types.map((typeItem: any) => capitalise(typeItem.type.name))
             }
             setPokemonDetails(pokemonResponseDetails)
         })
@@ -82,7 +65,9 @@ function PokemonModal(props: PokemonModalProps) {
 
     const renderContent = () => {
         const modalContent = isLoading ?
-            <CircularProgress /> :
+            <DialogContent dividers>
+                <CircularProgress />
+            </DialogContent> :
             <>
                 <DialogTitle>{`#${pokemonDetails.id} ${pokemonDetails.name}`}</DialogTitle>
                 <DialogContent dividers>
@@ -108,8 +93,8 @@ function PokemonModal(props: PokemonModalProps) {
         
         return (
             <Dialog
-                open={open}
                 onClose={closeModal} 
+                open={open}
             >
                 {modalContent}
             </Dialog>

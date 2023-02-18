@@ -1,29 +1,19 @@
 import { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { GridColDef, GridRowsProp } from '@mui/x-data-grid/models';
 import { GridEventListener } from '@mui/x-data-grid';
 
-
-interface PokemonTableProps {
-  totalCount: number;
-  loading: boolean;
-  rows: GridRowsProp[],
-  autoHeight: boolean;
-  columnWidth: number;
-  navigate(direction: string): void;
-  setCurrentPokemonId(id: number): void;
-}
+import { PokemonTableProps } from './types';
 
 function PokemonTable(props: PokemonTableProps) {
   const [currentPage, setCurrentPage] = useState(0)
   const { 
-    rows, 
     autoHeight,
-    columnWidth,
+    columns,
     loading,
-    totalCount,
     navigate,
-    setCurrentPokemonId
+    rows,
+    setCurrentPokemonId,
+    totalCount,
   } = props
 
   const handleClick: GridEventListener<'rowClick'> = (params) => {
@@ -31,24 +21,12 @@ function PokemonTable(props: PokemonTableProps) {
     setCurrentPokemonId(id)
   }
 
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'Pokemon #', width: columnWidth / 7 },
-    { field: 'name', headerName: 'Name', width: columnWidth / 3 },
-    { field: 'url', headerName: 'URL', width: columnWidth / 3 },
-  ]
-
   return (
     <DataGrid
-      onRowClick={handleClick}
-      pageSize={20}
-      rowCount={totalCount}
-      paginationMode="server"
-      loading={loading}
       autoHeight={autoHeight}
-      rows={rows}
       columns={columns}
-      rowsPerPageOptions={[]}
       getRowClassName={() => 'pokemon-table-row'}
+      loading={loading}
       onPageChange={
         (newPage) => {
           const actualNewPage = newPage + 1
@@ -57,6 +35,12 @@ function PokemonTable(props: PokemonTableProps) {
           setCurrentPage(newPage + 1)
         }
       }
+      onRowClick={handleClick}
+      pageSize={20}
+      paginationMode="server"
+      rowCount={totalCount}
+      rows={rows}
+      rowsPerPageOptions={[]}
     />
   );
 }
