@@ -8,6 +8,10 @@
 
 Run `npm start` for a dev server. Navigate to http://localhost:4200/. The app will automatically reload if you change any of the source files.
 
+## Automation testing
+
+Run `npm run automation-testing` to start up the development server and run the automated tests on it.
+
 ## Understand this workspace
 
 Run `nx graph` to see a diagram of the dependencies of the projects.
